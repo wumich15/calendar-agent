@@ -1,0 +1,6 @@
+node_modules/
+*.log
+.DS_Store
+
+# A clone of this same repository that ended up inside the working directory.
+calendar-agent/

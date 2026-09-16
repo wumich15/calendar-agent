@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Riverside Hall — What's On</title>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "MusicEvent",
+            "@id": "https://riversidehall.example/events/quartet",
+            "name": "Ashgrove Quartet",
+            "startDate": "2026-03-04T19:30:00-05:00",
+            "endDate": "2026-03-04T21:45:00-05:00",
+            "url": "https://riversidehall.example/events/quartet",
+            "description": "An evening of string quartets.",
+            "location": {
+              "@type": "Place",
+              "name": "Riverside Hall",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "14 River Road",
+                "addressLocality": "Brattleboro",
+                "addressRegion": "VT",
+                "postalCode": "05301"
+              }
+            }
+          },
+          {
+            "@type": "Festival",
+            "name": "Spring Craft Fair",
+            "startDate": "2026-04-11",
+            "endDate": "2026-04-12",
+            "location": "Riverside Hall Lawn"
+          },
+          {
+            "@type": "Event",
+            "name": "Members Preview",
+            "startDate": "2026-03-10T18:00:00",
+            "location": { "@type": "VirtualLocation", "url": "https://meet.example/preview" }
+          },
+          {
+            "@type": "Event",
+            "name": "Date To Be Announced"
+          }
+        ]
+      }
+    </script>
+  </head>
+  <body>
+    <h1>What's On</h1>
+    <p>See our listings above.</p>
+  </body>
+</html>
