@@ -37,7 +37,7 @@ function systemTimeZone(): string {
  * Ensures an account is connected before a command that needs one runs.
  *
  * At an interactive terminal this offers to start the authorization flow there
- * and then, so the first `cal <url>` does not simply fail. Anywhere else (a
+ * and then, so the first `calman <url>` does not simply fail. Anywhere else (a
  * script, a pipe, CI) it explains what to run instead of opening a browser
  * nobody is watching.
  */
@@ -46,7 +46,7 @@ export async function requireAuth(): Promise<void> {
 
   const notConnected = new UserFacingError(
     "No Google account is connected yet.",
-    "Run `cal auth` to authorize access to your Google Calendar, then try again.",
+    "Run `calman auth` to authorize access to your Google Calendar, then try again.",
   );
   if (!process.stdin.isTTY || !process.stdout.isTTY) throw notConnected;
 
@@ -81,7 +81,7 @@ export async function createContext(overrides: ContextOverrides = {}): Promise<C
   } catch (err) {
     throw new UserFacingError(
       `Could not open the calendar "${calendarId}": ${(err as Error).message}`,
-      "Run `cal calendars` to see the calendars you can use, then `cal config set calendar <id>`.",
+      "Run `calman calendars` to see the calendars you can use, then `calman config set calendar <id>`.",
     );
   }
 

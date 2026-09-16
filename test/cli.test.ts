@@ -61,11 +61,11 @@ describe("parseArgs", () => {
 describe("helpText", () => {
   it("documents the commands, the keys, and the name clash with the system cal", () => {
     const text = helpText();
-    assert.match(text, /cal <url>/);
-    assert.match(text, /cal view --week/);
+    assert.match(text, /calman <url>/);
+    assert.match(text, /calman view --week/);
     assert.match(text, /dd\s+Stage the selected event for deletion/);
     assert.match(text, /:q!\s+Discard unsaved changes and quit/);
-    assert.match(text, /already ship their own `cal` command|ship their own `cal` command/);
+    assert.match(text, /already ship a `cal` that prints a month calendar/);
   });
 });
 

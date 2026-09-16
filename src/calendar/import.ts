@@ -2,7 +2,7 @@ import type { CalendarClient } from "./client.ts";
 import { explainApiError } from "./client.ts";
 import type { NormalizedEvent, SkippedEvent } from "../types.ts";
 
-/** Extended-property keys cal writes on every event it creates. */
+/** Extended-property keys calman writes on every event it creates. */
 export const DEDUPE_PROPERTY = "calDedupeKey";
 export const SOURCE_PROPERTY = "calSourceUrl";
 
@@ -49,7 +49,7 @@ export function toGoogleEventBody(event: NormalizedEvent): Record<string, unknow
     description: event.description,
     start: event.allDay ? { date: event.start.date } : { dateTime: event.start.dateTime, timeZone: event.start.timeZone },
     end: event.allDay ? { date: event.end.date } : { dateTime: event.end.dateTime, timeZone: event.end.timeZone },
-    source: { title: "Imported by cal", url: event.sourceUrl },
+    source: { title: "Imported by calman", url: event.sourceUrl },
     extendedProperties: {
       private: {
         [DEDUPE_PROPERTY]: event.dedupeKey,

@@ -127,7 +127,7 @@ describe("normalizeEvents: descriptions and source links", () => {
     const { events } = normalizeFixture("jsonld-events.html");
     for (const event of events) {
       assert.equal(event.sourceUrl, SOURCE);
-      assert.match(event.description!, /Imported by cal from https:\/\/riversidehall\.example/);
+      assert.match(event.description!, /Imported by calman from https:\/\/riversidehall\.example/);
     }
   });
 

@@ -13,15 +13,15 @@ let dir: string;
 let savedEnv: Record<string, string | undefined>;
 
 beforeEach(async () => {
-  dir = await fs.mkdtemp(path.join(os.tmpdir(), "cal-config-"));
+  dir = await fs.mkdtemp(path.join(os.tmpdir(), "calman-config-"));
   savedEnv = {
-    CAL_CONFIG_DIR: process.env.CAL_CONFIG_DIR,
-    CAL_CLIENT_ID: process.env.CAL_CLIENT_ID,
-    CAL_CLIENT_SECRET: process.env.CAL_CLIENT_SECRET,
+    CALMAN_CONFIG_DIR: process.env.CALMAN_CONFIG_DIR,
+    CALMAN_CLIENT_ID: process.env.CALMAN_CLIENT_ID,
+    CALMAN_CLIENT_SECRET: process.env.CALMAN_CLIENT_SECRET,
   };
-  process.env.CAL_CONFIG_DIR = dir;
-  delete process.env.CAL_CLIENT_ID;
-  delete process.env.CAL_CLIENT_SECRET;
+  process.env.CALMAN_CONFIG_DIR = dir;
+  delete process.env.CALMAN_CLIENT_ID;
+  delete process.env.CALMAN_CLIENT_SECRET;
 });
 
 afterEach(async () => {
@@ -63,7 +63,7 @@ describe("config", () => {
     await fs.writeFile(configFile(), "{ not json");
     await assert.rejects(readConfig(), (err: UserFacingError) => {
       assert.match(err.message, /not valid JSON/);
-      assert.match(err.hint!, /cal auth/);
+      assert.match(err.hint!, /calman auth/);
       return true;
     });
   });
@@ -77,8 +77,8 @@ describe("config", () => {
 
 describe("resolveOAuthClient", () => {
   it("prefers environment variables over the config file", () => {
-    process.env.CAL_CLIENT_ID = "env-id";
-    process.env.CAL_CLIENT_SECRET = "env-secret";
+    process.env.CALMAN_CLIENT_ID = "env-id";
+    process.env.CALMAN_CLIENT_SECRET = "env-secret";
     assert.deepEqual(resolveOAuthClient({ calendarId: "primary", clientId: "file-id", clientSecret: "file-secret" }), {
       clientId: "env-id",
       clientSecret: "env-secret",
@@ -95,7 +95,7 @@ describe("resolveOAuthClient", () => {
   it("explains how to set up a client when none is configured", () => {
     assert.throws(() => resolveOAuthClient({ calendarId: "primary" }), (err: UserFacingError) => {
       assert.match(err.message, /No Google OAuth client is configured/);
-      assert.match(err.hint!, /CAL_CLIENT_ID/);
+      assert.match(err.hint!, /CALMAN_CLIENT_ID/);
       return true;
     });
   });

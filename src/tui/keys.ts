@@ -97,7 +97,7 @@ export function decodeKeys(input: string): Key[] {
 
       // Anything else beginning with ESC is a plain Escape. A terminal also
       // sends ESC + character for Alt+key, which is indistinguishable from
-      // Escape followed by a fast keystroke. cal binds no Alt shortcuts and
+      // Escape followed by a fast keystroke. calman binds no Alt shortcuts and
       // does bind Escape, so the remaining character is decoded on its own
       // rather than swallowed into a meta key.
       i += 1;

@@ -1,16 +1,16 @@
-# cal
+# calman
 
 A terminal application that imports events from a web page into your Google
 Calendar, and gives you a Vim-style calendar manager for the result.
 
 ```text
-cal https://example.com/events     # import the events on that page
-cal view                           # browse, edit, and delete your events
+calman https://example.com/events     # import the events on that page
+calman view                           # browse, edit, and delete your events
 ```
 
 - [Requirements](#requirements)
 - [Installation](#installation)
-- [The name clash with the system `cal`](#the-name-clash-with-the-system-cal)
+- [The system `cal` command](#the-system-cal-command)
 - [Connecting your Google account](#connecting-your-google-account)
 - [Importing events from a website](#importing-events-from-a-website)
 - [The calendar manager](#the-calendar-manager)
@@ -32,44 +32,47 @@ cal view                           # browse, edit, and delete your events
 git clone https://github.com/wumich15/calendar-agent.git
 cd calendar-agent
 npm install
-npm link          # puts `cal` on your PATH
+npm link          # puts `calman` on your PATH
 ```
 
 If you would rather not link it globally, run it in place:
 
 ```bash
-node bin/cal.js --help
+node bin/calman.js --help
 ```
 
-## The name clash with the system `cal`
+## The system `cal` command
 
 macOS, most Linux distributions, and the BSDs already ship a `/usr/bin/cal` that
-prints a month calendar. After `npm link`, whichever one comes first on your
-`PATH` wins, and it is often the system one. Check with:
+prints a month calendar. This project deliberately installs itself as `calman`
+so the two never collide: after `npm link` you have both, and `cal` keeps doing
+what it always did.
+
+Check what you are running with:
 
 ```bash
-which -a cal
+which -a calman
 ```
 
-If the system `cal` shadows this project, pick one of these:
+If `calman` is not on your `PATH` — you skipped `npm link`, or npm's global
+`bin` directory is not in `PATH` — use one of these instead:
 
-- **Call it by path.** `node /path/to/calendar-agent/bin/cal.js view`
+- **Call it by path.** `node /path/to/calendar-agent/bin/calman.js view`
 - **Add an alias** to `~/.zshrc` or `~/.bashrc`:
   ```bash
-  alias cal='node /path/to/calendar-agent/bin/cal.js'
+  alias calman='node /path/to/calendar-agent/bin/calman.js'
   ```
-  The system calendar is then still available as `/usr/bin/cal`.
 - **Use a different name.** Symlink the binary under a name of your choosing:
   ```bash
-  ln -s /path/to/calendar-agent/bin/cal.js ~/.local/bin/gcal
+  ln -s /path/to/calendar-agent/bin/calman.js ~/.local/bin/gcal
   ```
-- **Run it through npm** from the project directory: `npm run cal -- view`
+- **Run it through npm** from the project directory: `npm run calman -- view`
 
-Every example below is written as `cal`; substitute whatever you chose.
+Every example below is written as `calman`; substitute whatever you chose.
 
 ## Connecting your Google account
 
-`cal` talks to the Google Calendar API on your behalf, which means you need an
+`calman` talks to the Google Calendar API on your behalf, which means you need an
 OAuth client. Google does not allow a public desktop app to ship its own secret,
 so you create your own, once. It takes a few minutes and costs nothing.
 
@@ -85,26 +88,26 @@ so you create your own, once. It takes a few minutes and costs nothing.
 4. Under **APIs & Services → Credentials**, choose **Create credentials → OAuth
    client ID**, and pick **Desktop app** as the application type. Copy the
    client ID and client secret.
-5. Give them to `cal`, either through the environment:
+5. Give them to `calman`, either through the environment:
    ```bash
-   export CAL_CLIENT_ID='...apps.googleusercontent.com'
-   export CAL_CLIENT_SECRET='...'
+   export CALMAN_CLIENT_ID='...apps.googleusercontent.com'
+   export CALMAN_CLIENT_SECRET='...'
    ```
    or saved to the config file (which is created with owner-only permissions):
    ```bash
-   cal config set client-id '...apps.googleusercontent.com'
-   cal config set client-secret '...'
+   calman config set client-id '...apps.googleusercontent.com'
+   calman config set client-secret '...'
    ```
 6. Connect your account:
    ```bash
-   cal auth
+   calman auth
    ```
-   Your browser opens Google's consent page. `cal` runs a one-shot server on
+   Your browser opens Google's consent page. `calman` runs a one-shot server on
    `127.0.0.1` to receive the response, exchanges it for tokens using PKCE, and
    stores them. If the browser does not open, the URL is printed for you to
-   paste; `cal auth --no-browser` skips the launch entirely.
+   paste; `calman auth --no-browser` skips the launch entirely.
 
-`cal` requests only the access it needs:
+`calman` requests only the access it needs:
 
 | Scope | Why |
 | --- | --- |
@@ -112,18 +115,18 @@ so you create your own, once. It takes a few minutes and costs nothing.
 | `calendar.calendarlist.readonly` | List the calendars you can choose between |
 | `openid`, `email` | Show which account is connected |
 
-Check the connection at any time with `cal auth --status`, and disconnect with
-`cal auth --logout`, which revokes the token with Google and deletes the local
+Check the connection at any time with `calman auth --status`, and disconnect with
+`calman auth --logout`, which revokes the token with Google and deletes the local
 copy.
 
 ## Importing events from a website
 
 ```bash
-cal https://example.com/events              # import
-cal https://example.com/events --dry-run    # preview, writing nothing
+calman https://example.com/events              # import
+calman https://example.com/events --dry-run    # preview, writing nothing
 ```
 
-`cal` fetches the page's HTML and reads events from it, preferring structured
+`calman` fetches the page's HTML and reads events from it, preferring structured
 markup and falling back to ordinary HTML:
 
 1. **JSON-LD** (`<script type="application/ld+json">`) — schema.org `Event` and
@@ -141,7 +144,7 @@ and the source URL.
 
 ### What it will not guess
 
-`cal` does not invent scheduling information. An event with no date, or with a
+`calman` does not invent scheduling information. An event with no date, or with a
 date it cannot parse, is skipped and listed in the summary with the reason.
 Where an interpretation is unavoidable, it is made explicitly and reported:
 
@@ -157,9 +160,9 @@ Every one of these appears under "Assumptions made while reading the page".
 ### Duplicate prevention
 
 Each imported event carries a private `calDedupeKey` property. Before creating
-anything, `cal` asks Google whether an event with that key already exists on the
-calendar. Running the same page twice therefore reports duplicates rather than
-creating them.
+anything, `calman` asks Google whether an event with that key already exists on
+the calendar. Running the same page twice therefore reports duplicates rather
+than creating them.
 
 The key is derived from a stable identifier published by the source when one
 exists (schema.org `@id` or `identifier`, or the microdata `itemid`), so an event
@@ -182,7 +185,7 @@ Imported 3:
   + Members Preview  2026-03-10 18:00-19:00 (America/New_York)
 
 Could not be imported (1):
-  - Date To Be Announced: no start date was found, and cal does not guess dates
+  - Date To Be Announced: no start date was found, and calman does not guess dates
 
 Assumptions made while reading the page:
   ~ Spring Craft Fair: the page gave a date with no time, so it was imported as an all-day event
@@ -195,7 +198,7 @@ Source: https://riversidehall.example/whats-on
 ### Pages that cannot be imported
 
 Some sites build their listings in the browser with JavaScript, so the HTML the
-server sends contains no events. `cal` detects this and says so rather than
+server sends contains no events. `calman` detects this and says so rather than
 reporting an empty page. Try a printable or plain-HTML version of the listing,
 or the individual event's own page, which is more often server-rendered.
 
@@ -205,9 +208,9 @@ values and never executed or interpreted as an instruction.
 ## The calendar manager
 
 ```bash
-cal view                     # daily view (the default)
-cal view --week              # weekly view
-cal view --date 2026-09-15   # open on a particular date
+calman view                     # daily view (the default)
+calman view --week              # weekly view
+calman view --date 2026-09-15   # open on a particular date
 ```
 
 The manager loads your real events for the visible range and shows the calendar
@@ -328,11 +331,11 @@ closes.
 ## Configuration
 
 ```bash
-cal calendars                                  # list calendars you can use
-cal config list                                # show current settings
-cal config set calendar work@example.com       # choose a calendar
-cal config set timezone Europe/Berlin          # override the display time zone
-cal config set week-start monday               # start weeks on Monday
+calman calendars                                  # list calendars you can use
+calman config list                                # show current settings
+calman config set calendar work@example.com       # choose a calendar
+calman config set timezone Europe/Berlin          # override the display time zone
+calman config set week-start monday               # start weeks on Monday
 ```
 
 | Key | Meaning | Default |
@@ -346,18 +349,18 @@ Single commands can override the calendar and time zone without changing the
 saved configuration:
 
 ```bash
-cal view --calendar work@example.com --timezone Asia/Tokyo
-cal https://example.com/events --calendar personal@example.com
+calman view --calendar work@example.com --timezone Asia/Tokyo
+calman https://example.com/events --calendar personal@example.com
 ```
 
-If you only have read access to a calendar, `cal` says so: the manager opens
+If you only have read access to a calendar, `calman` says so: the manager opens
 with `[read-only]` in the header and refuses to stage edits, and an import
 stops with an explanation rather than failing part-way through.
 
 ## How your credentials are stored
 
-Configuration and credentials live in `$CAL_CONFIG_DIR`, else
-`$XDG_CONFIG_HOME/cal`, else `~/.config/cal`:
+Configuration and credentials live in `$CALMAN_CONFIG_DIR`, else
+`$XDG_CONFIG_HOME/calman`, else `~/.config/calman`:
 
 - `config.json` — settings, written with mode `0600`
 - `tokens.json` — access and refresh tokens, written with mode `0600` inside a
@@ -365,35 +368,36 @@ Configuration and credentials live in `$CAL_CONFIG_DIR`, else
 
 Tokens are never written to logs or included in output. The access token is
 refreshed automatically a minute before it expires; concurrent requests share a
-single refresh. If the refresh token has been revoked or has expired, `cal` says
-so and tells you to run `cal auth` again. `cal auth --logout` revokes the token
-with Google and removes the local file.
+single refresh. If the refresh token has been revoked or has expired, `calman`
+says so and tells you to run `calman auth` again. `calman auth --logout` revokes
+the token with Google and removes the local file.
 
 ## Troubleshooting
 
 **"No Google OAuth client is configured."** — Follow
 [Connecting your Google account](#connecting-your-google-account) to create a
-Desktop-app client, then set `CAL_CLIENT_ID` and `CAL_CLIENT_SECRET`.
+Desktop-app client, then set `CALMAN_CLIENT_ID` and `CALMAN_CLIENT_SECRET`.
 
 **"Google rejected the stored credentials."** or **"Could not refresh Google
 access."** — The token was revoked, expired, or the OAuth client changed. Run
-`cal auth` to reconnect.
+`calman auth` to reconnect.
 
-**"Access blocked: cal has not completed the Google verification process."** —
+**"Access blocked: calman has not completed the Google verification process."** —
 Add your own Google account under **Test users** on the OAuth consent screen.
 
 **"No events were found on …"** — The page may not mark its events up in a way
-`cal` can read, or may render them with JavaScript. Try `--dry-run` on the
+`calman` can read, or may render them with JavaScript. Try `--dry-run` on the
 individual event's page, or a printable version of the listing.
 
-**An event imported at the wrong time.** — The page probably stated no time zone.
-Check the assumptions in the summary and set `cal config set timezone <zone>`, or
-pass `--timezone` for one run.
+**An event imported at the wrong time.** — The page probably stated no time
+zone. Check the assumptions in the summary and set `calman config set timezone
+<zone>`, or pass `--timezone` for one run.
 
-**The wrong `cal` ran.** — See
-[The name clash with the system `cal`](#the-name-clash-with-the-system-cal).
+**`calman: command not found`.** — See
+[The system `cal` command](#the-system-cal-command). Note that the executable is
+`calman`, not `cal`; plain `cal` is your operating system's month printer.
 
-For a stack trace on an unexpected error, set `CAL_DEBUG=1`.
+For a stack trace on an unexpected error, set `CALMAN_DEBUG=1`.
 
 ## Development
 

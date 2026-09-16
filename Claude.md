@@ -1,28 +1,28 @@
-# cal — Calendar CLI and Manager
+# calman — Calendar CLI and Manager
 
 Repository: [https://github.com/wumich15/calendar-agent.git](https://github.com/wumich15/calendar-agent.git)
 
 ## Project goal
 
-Build a terminal application named `cal` that imports calendar events from a website into the user's Google Calendar and provides an interactive calendar manager with daily and weekly views and Vim-style controls.
+Build a terminal application named `calman` that imports calendar events from a website into the user's Google Calendar and provides an interactive calendar manager with daily and weekly views and Vim-style controls.
 
 ## Core commands
 
 ```text
-cal <url>                 Scrape a website and import its events into Google Calendar.
-cal <url> --dry-run       Preview the extracted events without importing them.
-cal view                 Open the interactive calendar manager in daily view.
-cal view --day            Open daily view.
-cal view --week           Open weekly view.
-cal auth                 Connect the user's Google account.
-cal --help               Show command usage and keyboard shortcuts.
+calman <url>              Scrape a website and import its events into Google Calendar.
+calman <url> --dry-run    Preview the extracted events without importing them.
+calman view               Open the interactive calendar manager in daily view.
+calman view --day         Open daily view.
+calman view --week        Open weekly view.
+calman auth               Connect the user's Google account.
+calman --help             Show command usage and keyboard shortcuts.
 ```
 
 If the user has not connected an account, guide them through Google authorization when a command first requires calendar access. Use the user's primary calendar by default and allow them to configure another calendar they can edit.
 
 ## 1. Website event import
 
-- Accept an HTTP or HTTPS URL through `cal <url>`.
+- Accept an HTTP or HTTPS URL through `calman <url>`.
 - Fetch the page's HTML and extract calendar events. Read structured event metadata, such as JSON-LD and microdata, when available, and support event information in ordinary HTML.
 - Extract the event's name, date, start and end times, time zone, location, description, and source URL when available. Support multiple events on a single page and all-day events.
 - Normalize dates and times before importing. Respect explicit event time zones; otherwise use the user's configured calendar time zone and report that assumption.
@@ -35,7 +35,7 @@ If the user has not connected an account, guide them through Google authorizatio
 
 ## 2. Interactive calendar manager
 
-- `cal view` opens a terminal interface backed by the Google Calendar API.
+- `calman view` opens a terminal interface backed by the Google Calendar API.
 - Load the user's actual events for the visible date range and display them in chronological order.
 - Provide both daily and weekly views, with a clear current date or date range, calendar name, and time zone.
 - Display event names, start and end times, and locations. Allow the user to inspect full descriptions and other event details.
@@ -100,13 +100,13 @@ Use explicit Normal, Insert/Edit, and Command modes. Display the current mode an
 - Keep the interface responsive during network requests and show loading and error states.
 - Test event extraction, date and time-zone handling, duplicate prevention, mode-specific shortcuts, staged edits and deletions, and partial save failures. Use fixtures and mocked API responses for automated tests.
 - Document installation, Google authorization setup, command examples, and the keyboard reference.
-- Document that some operating systems already provide a command named `cal`, and explain how to run this project's executable when a naming conflict occurs.
+- Document that the executable is named `calman`, that many operating systems already provide an unrelated command named `cal`, and how to run this project's executable if it is not on the user's `PATH`.
 
 ## Acceptance criteria
 
-1. Running `cal <url>` against a supported event page imports its valid events into the connected Google Calendar and reports the result.
+1. Running `calman <url>` against a supported event page imports its valid events into the connected Google Calendar and reports the result.
 2. Importing the same unchanged page twice does not create duplicate events.
-3. Running `cal view` displays the user's Google Calendar events, and the user can switch between daily and weekly views.
+3. Running `calman view` displays the user's Google Calendar events, and the user can switch between daily and weekly views.
 4. The user can navigate with Vim-style shortcuts, press `i` to edit event details, and use `dd` to stage a deletion.
 5. `:wq` saves staged edits and deletions to Google Calendar and exits only after they succeed.
 6. `:q!` discards unsaved changes without modifying Google Calendar.

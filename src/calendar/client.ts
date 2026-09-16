@@ -340,7 +340,7 @@ function toApiError(status: number, body: unknown): CalendarApiError {
 /** Turns an API error into a sentence a user can act on. */
 export function explainApiError(err: unknown): string {
   if (err instanceof CalendarApiError) {
-    if (err.status === 401) return "Google rejected the stored credentials. Run `cal auth` to reconnect.";
+    if (err.status === 401) return "Google rejected the stored credentials. Run `calman auth` to reconnect.";
     if (err.isPermission) {
       return `Google denied the request: ${err.message}. You may not have write access to this calendar.`;
     }

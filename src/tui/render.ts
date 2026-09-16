@@ -405,7 +405,7 @@ function headerLines(frame: Frame, width: number): string[] {
   const pending = frame.drafts.size;
   const account = frame.account ? ` ${ansi.gray}(${frame.account})${ansi.reset}` : "";
   const readOnly = frame.calendarWritable ? "" : `  ${ansi.yellow}[read-only]${ansi.reset}`;
-  const left = `${ansi.bold}cal${ansi.reset}  ${frame.calendarName}${account}${readOnly}`;
+  const left = `${ansi.bold}calman${ansi.reset}  ${frame.calendarName}${account}${readOnly}`;
   const right = `${ansi.gray}${frame.timeZone}${ansi.reset}`;
   const gap = Math.max(width - displayWidth(left) - displayWidth(right), 1);
   const line1 = `${left}${" ".repeat(gap)}${right}`;

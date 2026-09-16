@@ -117,9 +117,9 @@ export async function authorize(options: { printUrlOnly?: boolean } = {}): Promi
       const gotState = url.searchParams.get("state");
       const finish = (body: string) => {
         res.writeHead(200, { "content-type": "text/html; charset=utf-8" });
-        res.end(`<!doctype html><meta charset="utf-8"><title>cal</title>
+        res.end(`<!doctype html><meta charset="utf-8"><title>calman</title>
 <body style="font-family:system-ui;padding:3rem;max-width:34rem">
-<h1>cal</h1><p>${body}</p></body>`);
+<h1>calman</h1><p>${body}</p></body>`);
       };
       clearTimeout(timer);
       if (error) {
@@ -191,7 +191,7 @@ async function refresh(tokens: StoredTokens, config: Config): Promise<StoredToke
   if (!tokens.refreshToken) {
     throw new UserFacingError(
       "Your Google access token expired and there is no refresh token stored.",
-      "Run `cal auth` to reconnect your account.",
+      "Run `calman auth` to reconnect your account.",
     );
   }
   const { clientId, clientSecret } = resolveOAuthClient(config);
@@ -206,7 +206,7 @@ async function refresh(tokens: StoredTokens, config: Config): Promise<StoredToke
     // invalid_grant means the user revoked access or the token aged out.
     throw new UserFacingError(
       `Could not refresh Google access: ${describeOAuthError(res.status, payload)}`,
-      "Access may have been revoked or expired. Run `cal auth` to reconnect.",
+      "Access may have been revoked or expired. Run `calman auth` to reconnect.",
     );
   }
   const next: StoredTokens = {
@@ -233,7 +233,7 @@ export async function createTokenProvider(config?: Config): Promise<TokenProvide
   if (!tokens) {
     throw new UserFacingError(
       "No Google account is connected.",
-      "Run `cal auth` to connect your Google Calendar.",
+      "Run `calman auth` to connect your Google Calendar.",
     );
   }
   let inflight: Promise<StoredTokens> | null = null;

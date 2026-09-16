@@ -34,7 +34,7 @@ export async function readConfig(): Promise<Config> {
   } catch {
     throw new UserFacingError(
       `Config file is not valid JSON: ${configFile()}`,
-      "Fix or delete the file, then run `cal auth` again.",
+      "Fix or delete the file, then run `calman auth` again.",
     );
   }
   const obj = (parsed ?? {}) as Partial<Config>;
@@ -67,15 +67,15 @@ export async function updateConfig(patch: Partial<Config>): Promise<Config> {
  * machine never needs them written to disk.
  */
 export function resolveOAuthClient(config: Config): { clientId: string; clientSecret: string } {
-  const clientId = process.env.CAL_CLIENT_ID || config.clientId;
-  const clientSecret = process.env.CAL_CLIENT_SECRET || config.clientSecret;
+  const clientId = process.env.CALMAN_CLIENT_ID || config.clientId;
+  const clientSecret = process.env.CALMAN_CLIENT_SECRET || config.clientSecret;
   if (!clientId || !clientSecret) {
     throw new UserFacingError(
       "No Google OAuth client is configured.",
       [
         "Create a Desktop-app OAuth client in Google Cloud Console, then either:",
-        "  export CAL_CLIENT_ID=... CAL_CLIENT_SECRET=...",
-        "or run: cal config set client-id <id> && cal config set client-secret <secret>",
+        "  export CALMAN_CLIENT_ID=... CALMAN_CLIENT_SECRET=...",
+        "or run: calman config set client-id <id> && calman config set client-secret <secret>",
         "See the Google authorization section of the README for the full walkthrough.",
       ].join("\n"),
     );

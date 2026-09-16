@@ -84,10 +84,10 @@ async function start(
   return { app, client, screen, exit };
 }
 
-describe("cal view: loading and layout", () => {
+describe("calman view: loading and layout", () => {
   it("shows the calendar, account, time zone, and date", async () => {
     const { screen } = await start();
-    assert.match(screen.text, /cal {2}Test Calendar \(user@example\.com\)/);
+    assert.match(screen.text, /calman {2}Test Calendar \(user@example\.com\)/);
     assert.match(screen.text, /America\/New_York/);
     assert.match(screen.text, /Tue, Sep 15 2026/);
     assert.match(screen.text, /\[DAY\]/);
@@ -133,7 +133,7 @@ describe("cal view: loading and layout", () => {
   });
 });
 
-describe("cal view: Normal mode navigation", () => {
+describe("calman view: Normal mode navigation", () => {
   it("moves the selection with j and k", async () => {
     const { screen } = await start();
     await screen.press("j");
@@ -186,7 +186,7 @@ describe("cal view: Normal mode navigation", () => {
   });
 });
 
-describe("cal view: daily and weekly views", () => {
+describe("calman view: daily and weekly views", () => {
   it("switches to weekly view with :week and back with :day", async () => {
     const { screen } = await start();
     await screen.press(":week\r");
@@ -211,7 +211,7 @@ describe("cal view: daily and weekly views", () => {
   });
 });
 
-describe("cal view: staging deletions", () => {
+describe("calman view: staging deletions", () => {
   it("stages a deletion with dd without contacting Google", async () => {
     const { screen, client } = await start();
     await screen.press("jdd");
@@ -266,7 +266,7 @@ describe("cal view: staging deletions", () => {
   });
 });
 
-describe("cal view: Insert/Edit mode", () => {
+describe("calman view: Insert/Edit mode", () => {
   it("opens the labelled edit form on i", async () => {
     const { screen } = await start();
     await screen.press("ji");
@@ -353,7 +353,7 @@ describe("cal view: Insert/Edit mode", () => {
   });
 });
 
-describe("cal view: saving", () => {
+describe("calman view: saving", () => {
   it("writes staged changes to Google Calendar on :w", async () => {
     const { screen, client } = await start();
     await screen.press("ji");
@@ -457,7 +457,7 @@ describe("cal view: saving", () => {
   });
 });
 
-describe("cal view: quitting", () => {
+describe("calman view: quitting", () => {
   it("quits on :q when there is nothing unsaved", async () => {
     const { screen, exit } = await start();
     await screen.press(":q\r");
@@ -509,7 +509,7 @@ describe("cal view: quitting", () => {
   });
 });
 
-describe("cal view: Command mode", () => {
+describe("calman view: Command mode", () => {
   it("echoes what is typed and cancels on Escape", async () => {
     const { screen } = await start();
     await screen.press(":wee");
@@ -540,7 +540,7 @@ describe("cal view: Command mode", () => {
   });
 });
 
-describe("cal view: read-only calendars", () => {
+describe("calman view: read-only calendars", () => {
   it("says the calendar is read-only and refuses to stage changes", async () => {
     const { screen, client } = await start({ writable: false });
     assert.match(screen.text, /\[read-only\]/);
@@ -562,7 +562,7 @@ describe("cal view: read-only calendars", () => {
   });
 });
 
-describe("cal view: error handling", () => {
+describe("calman view: error handling", () => {
   it("reports a load failure without losing staged work", async () => {
     const { screen, client } = await start();
     await screen.press("jdd");
@@ -574,7 +574,7 @@ describe("cal view: error handling", () => {
   });
 });
 
-describe("cal view: scrolling overlays", () => {
+describe("calman view: scrolling overlays", () => {
   it("scrolls the keyboard reference with j and k", async () => {
     const { screen } = await start();
     await screen.press("?");
@@ -606,7 +606,7 @@ describe("cal view: scrolling overlays", () => {
   });
 });
 
-describe("cal view: recurring series saves", () => {
+describe("calman view: recurring series saves", () => {
   it("re-reads the range after saving a whole-series change", async () => {
     const { screen, client } = await start();
     await screen.press(":goto 2026-09-17\r");

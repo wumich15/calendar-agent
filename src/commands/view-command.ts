@@ -1,5 +1,5 @@
 /**
- * `cal view` — open the interactive calendar manager.
+ * `calman view` — open the interactive calendar manager.
  */
 
 import { App } from "../tui/app.ts";
@@ -18,7 +18,7 @@ export type ViewCommandOptions = {
 export async function runView(options: ViewCommandOptions): Promise<number> {
   if (!process.stdin.isTTY || !process.stdout.isTTY) {
     throw new UserFacingError(
-      "`cal view` needs an interactive terminal.",
+      "`calman view` needs an interactive terminal.",
       "Run it directly in a terminal rather than through a pipe or a non-interactive shell.",
     );
   }

@@ -3,7 +3,7 @@ import { UserFacingError } from "../types.ts";
 const MAX_BYTES = 8 * 1024 * 1024;
 const DEFAULT_TIMEOUT_MS = 20_000;
 const USER_AGENT =
-  "cal/1.0 (+https://github.com/wumich15/calendar-agent) calendar-event-importer";
+  "calman/1.0 (+https://github.com/wumich15/calendar-agent) calendar-event-importer";
 
 export type FetchedPage = {
   /** URL after redirects, used as the canonical source URL. */
@@ -16,7 +16,7 @@ export type FetchedPage = {
 export function parsePageUrl(input: string): URL {
   const invalid = new UserFacingError(
     `Not a valid URL: ${input}`,
-    "Pass a full address, for example: cal https://example.com/events",
+    "Pass a full address, for example: calman https://example.com/events",
   );
 
   let url: URL;
@@ -96,7 +96,7 @@ export async function fetchPage(
   if (contentType && !/text\/html|xhtml|text\/plain|application\/xml|\+xml|application\/json/i.test(contentType)) {
     throw new UserFacingError(
       `${url} is ${contentType.split(";")[0]}, not an HTML page.`,
-      "Point cal at a web page that lists events.",
+      "Point calman at a web page that lists events.",
     );
   }
 

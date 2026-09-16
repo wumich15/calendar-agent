@@ -1,13 +1,13 @@
 {
   "name": "calman",
   "version": "1.0.0",
-  "description": "cal — import website events into Google Calendar and manage them from a Vim-style terminal UI",
+  "description": "calman — import website events into Google Calendar and manage them from a Vim-style terminal UI",
   "type": "module",
   "engines": {
     "node": ">=22.18.0"
   },
   "bin": {
-    "cal": "bin/cal.js"
+    "calman": "bin/calman.js"
   },
   "files": [
     "bin",
@@ -15,7 +15,7 @@
     "README.md"
   ],
   "scripts": {
-    "cal": "node bin/cal.js",
+    "calman": "node bin/calman.js",
     "test": "node --test --experimental-strip-types \"test/**/*.test.ts\"",
     "typecheck": "tsc --noEmit"
   },

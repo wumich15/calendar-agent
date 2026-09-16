@@ -156,7 +156,7 @@ describe("toGoogleEventBody", () => {
   it("records the source page so each import can be traced back", () => {
     const { events } = prepare("jsonld-events.html");
     const body = toGoogleEventBody(events[0]!);
-    assert.deepEqual(body.source, { title: "Imported by cal", url: SOURCE });
+    assert.deepEqual(body.source, { title: "Imported by calman", url: SOURCE });
   });
 
   it("omits location entirely when the page gave none", () => {

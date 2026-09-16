@@ -54,7 +54,7 @@ export function parseArgs(argv: string[]): ParsedArgs {
     if (arg.startsWith("-") && arg.length > 1) {
       const short: Record<string, string> = { h: "help", v: "version", n: "dry-run" };
       const name = short[arg.slice(1)];
-      if (!name) throw new UserFacingError(`Unknown option "${arg}".`, "Run `cal --help` for usage.");
+      if (!name) throw new UserFacingError(`Unknown option "${arg}".`, "Run `calman --help` for usage.");
       flags[name] = true;
       continue;
     }
@@ -74,32 +74,32 @@ export function parseArgs(argv: string[]): ParsedArgs {
 
 export function helpText(): string {
   const lines: string[] = [
-    "cal - import website events into Google Calendar and manage them from the terminal",
+    "calman - import website events into Google Calendar and manage them from the terminal",
     "",
     "USAGE",
-    "  cal <url>                 Scrape a website and import its events into Google Calendar",
-    "  cal <url> --dry-run       Preview the extracted events without importing them",
-    "  cal view                  Open the interactive calendar manager (daily view)",
-    "  cal view --day            Open daily view",
-    "  cal view --week           Open weekly view",
-    "  cal auth                  Connect your Google account",
-    "  cal auth --status         Show which account is connected",
-    "  cal auth --logout         Disconnect and remove stored credentials",
-    "  cal calendars             List the calendars you can use",
-    "  cal config list           Show current settings",
-    "  cal config set <key> <v>  Change a setting (calendar, timezone, week-start,",
-    "                            client-id, client-secret)",
-    "  cal --help                Show this help",
-    "  cal --version             Show the version",
+    "  calman <url>                 Scrape a website and import its events into Google Calendar",
+    "  calman <url> --dry-run       Preview the extracted events without importing them",
+    "  calman view                  Open the interactive calendar manager (daily view)",
+    "  calman view --day            Open daily view",
+    "  calman view --week           Open weekly view",
+    "  calman auth                  Connect your Google account",
+    "  calman auth --status         Show which account is connected",
+    "  calman auth --logout         Disconnect and remove stored credentials",
+    "  calman calendars             List the calendars you can use",
+    "  calman config list           Show current settings",
+    "  calman config set <key> <v>  Change a setting (calendar, timezone, week-start,",
+    "                               client-id, client-secret)",
+    "  calman --help                Show this help",
+    "  calman --version             Show the version",
     "",
     "OPTIONS",
-    "  --dry-run, -n             Preview only; do not write to Google Calendar",
-    "  --calendar <id>           Use this calendar for one command",
-    "  --timezone <zone>         Use this IANA time zone for one command",
-    "  --date <YYYY-MM-DD>       Open `cal view` on this date",
-    "  --day-first               Read ambiguous numeric dates as day/month",
+    "  --dry-run, -n                Preview only; do not write to Google Calendar",
+    "  --calendar <id>              Use this calendar for one command",
+    "  --timezone <zone>            Use this IANA time zone for one command",
+    "  --date <YYYY-MM-DD>          Open `calman view` on this date",
+    "  --day-first                  Read ambiguous numeric dates as day/month",
     "",
-    "INTERACTIVE KEYS (cal view)",
+    "INTERACTIVE KEYS (calman view)",
   ];
   for (const [keys, description] of HELP_LINES) {
     if (!keys && !description) continue;
@@ -107,23 +107,24 @@ export function helpText(): string {
   }
   lines.push("");
   lines.push("NOTES");
-  lines.push("  macOS and most Linux distributions ship their own `cal` command that prints a");
-  lines.push("  month calendar. Check which one you are running with `which -a cal`. If the");
-  lines.push("  system one wins, call this project by path (node <project>/bin/cal.js), add an");
-  lines.push("  alias (alias cal='node <project>/bin/cal.js'), or symlink it under another name.");
+  lines.push("  This command is named `calman` rather than `cal` because macOS, the BSDs, and most");
+  lines.push("  Linux distributions already ship a `cal` that prints a month calendar; that one is");
+  lines.push("  left untouched. Check what you are running with `which -a calman`. If `calman` is");
+  lines.push("  not on your PATH, call this project by path (node <project>/bin/calman.js), add an");
+  lines.push("  alias (alias calman='node <project>/bin/calman.js'), or symlink it under any name.");
   lines.push("  See the README for details.");
   return lines.join("\n");
 }
 
 function reportError(err: unknown): void {
   if (err instanceof UserFacingError) {
-    console.error(`cal: ${err.message}`);
+    console.error(`calman: ${err.message}`);
     if (err.hint) console.error(err.hint);
     return;
   }
   const message = (err as Error)?.message ?? String(err);
-  console.error(`cal: ${message}`);
-  if (process.env.CAL_DEBUG) console.error((err as Error)?.stack);
+  console.error(`calman: ${message}`);
+  if (process.env.CALMAN_DEBUG) console.error((err as Error)?.stack);
 }
 
 export async function main(argv: string[]): Promise<number> {
@@ -177,7 +178,7 @@ export async function main(argv: string[]): Promise<number> {
         if (parsed.positional.length > 1) {
           throw new UserFacingError(
             `Expected one URL but got ${parsed.positional.length}: ${parsed.positional.join(" ")}`,
-            "Import one page at a time: cal https://example.com/events",
+            "Import one page at a time: calman https://example.com/events",
           );
         }
         return await runImport({

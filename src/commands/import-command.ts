@@ -1,5 +1,5 @@
 /**
- * `cal <url>` — fetch a page, extract its events, and add them to the calendar.
+ * `calman <url>` — fetch a page, extract its events, and add them to the calendar.
  */
 
 import { createContext } from "./context.ts";
@@ -33,7 +33,7 @@ export async function runImport(options: ImportCommandOptions): Promise<number> 
   if (!options.dryRun && !context.writable) {
     throw new UserFacingError(
       `You have ${context.calendar.accessRole} access to "${context.calendar.summary}", which is read-only.`,
-      "Choose a calendar you can edit with `cal config set calendar <id>`, or preview with --dry-run.",
+      "Choose a calendar you can edit with `calman config set calendar <id>`, or preview with --dry-run.",
     );
   }
 
@@ -46,7 +46,7 @@ export async function runImport(options: ImportCommandOptions): Promise<number> 
       throw new UserFacingError(
         "No events could be read from this page.",
         [
-          "The page appears to build its content with JavaScript in the browser, and cal reads",
+          "The page appears to build its content with JavaScript in the browser, and calman reads",
           "the HTML the server sends. Try one of these instead:",
           "  - a printable, plain-HTML, or RSS/iCal version of the same listing",
           "  - the individual event's own page, which is more often server-rendered",
@@ -55,7 +55,7 @@ export async function runImport(options: ImportCommandOptions): Promise<number> 
     }
     throw new UserFacingError(
       `No events were found on ${page.url}.`,
-      "cal reads JSON-LD, microdata, hCalendar, and ordinary HTML with <time> elements. The page may not list events, or may not mark them up in a readable way.",
+      "calman reads JSON-LD, microdata, hCalendar, and ordinary HTML with <time> elements. The page may not list events, or may not mark them up in a readable way.",
     );
   }
 

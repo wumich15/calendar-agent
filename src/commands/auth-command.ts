@@ -1,6 +1,6 @@
 /**
- * `cal auth` — connect, inspect, or disconnect the Google account, and
- * `cal calendars` / `cal config` for the settings the rest of the app reads.
+ * `calman auth` — connect, inspect, or disconnect the Google account, and
+ * `calman calendars` / `calman config` for the settings the rest of the app reads.
  */
 
 import { authorize, authStatus, signOut } from "../auth/google-auth.ts";
@@ -23,14 +23,14 @@ export async function runAuth(options: {
   if (options.logout) {
     await signOut();
     log("Disconnected. Stored credentials were removed and the token was revoked.");
-    log("Run `cal auth` to connect again.");
+    log("Run `calman auth` to connect again.");
     return 0;
   }
 
   if (options.status) {
     const status = await authStatus();
     if (!status.connected) {
-      log("Not connected. Run `cal auth` to authorize access to your Google Calendar.");
+      log("Not connected. Run `calman auth` to authorize access to your Google Calendar.");
       return 1;
     }
     log(`Connected${status.account ? ` as ${status.account}` : ""}.`);
@@ -56,7 +56,7 @@ export async function runAuth(options: {
       const client = new GoogleCalendarClient({ tokens: await createTokenProvider(config) });
       const calendar = await client.getCalendar("primary");
       log(`Using your primary calendar: ${calendar.summary} (${calendar.timeZone}).`);
-      log("Run `cal calendars` to see other calendars you can use.");
+      log("Run `calman calendars` to see other calendars you can use.");
     } catch {
       log("Using your primary calendar.");
     }
@@ -88,8 +88,8 @@ export async function runCalendars(log = (line: string) => console.log(line)): P
     log(`     timezone: ${calendar.timeZone}`);
     log("");
   }
-  log("A * marks the calendar cal is using. Change it with:");
-  log("  cal config set calendar <id>");
+  log("A * marks the calendar calman is using. Change it with:");
+  log("  calman config set calendar <id>");
   return 0;
 }
 
@@ -108,10 +108,10 @@ export async function runConfig(
     log(`  timezone:      ${config.timeZone ?? "(follow the calendar's own time zone)"}`);
     log(`  week-start:    ${config.weekStartsOn === 1 ? "monday" : "sunday"}`);
     log(
-      `  client-id:     ${process.env.CAL_CLIENT_ID ? "(from CAL_CLIENT_ID)" : config.clientId ? "(set)" : "(not set)"}`,
+      `  client-id:     ${process.env.CALMAN_CLIENT_ID ? "(from CALMAN_CLIENT_ID)" : config.clientId ? "(set)" : "(not set)"}`,
     );
     log(
-      `  client-secret: ${process.env.CAL_CLIENT_SECRET ? "(from CAL_CLIENT_SECRET)" : config.clientSecret ? "(set)" : "(not set)"}`,
+      `  client-secret: ${process.env.CALMAN_CLIENT_SECRET ? "(from CALMAN_CLIENT_SECRET)" : config.clientSecret ? "(set)" : "(not set)"}`,
     );
     return 0;
   }
@@ -139,13 +139,13 @@ export async function runConfig(
   if (action !== "set") {
     throw new UserFacingError(
       `Unknown config action "${action}".`,
-      "Usage: cal config [list | get <key> | set <key> <value>]",
+      "Usage: calman config [list | get <key> | set <key> <value>]",
     );
   }
 
   const value = rest.join(" ").trim();
   if (!key || !value) {
-    throw new UserFacingError("Usage: cal config set <key> <value>", `Known keys: ${CONFIG_KEYS.join(", ")}`);
+    throw new UserFacingError("Usage: calman config set <key> <value>", `Known keys: ${CONFIG_KEYS.join(", ")}`);
   }
 
   switch (key) {
